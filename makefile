@@ -11,12 +11,13 @@ AR = ar
 LD = g++
 WINDRES = windres
 
-INC = 
+INC =
 CFLAGS = -Wall
-RESINC = 
-LIBDIR = 
+CXXFLAGS =  -fPIE
+RESINC =
+LIBDIR =
 LIB = -lftdi -lusb
-LDFLAGS = 
+LDFLAGS =
 
 INC_DEBUG = $(INC)
 CFLAGS_DEBUG = $(CFLAGS) -pg -g
@@ -26,7 +27,7 @@ LIBDIR_DEBUG = $(LIBDIR)
 LIB_DEBUG = $(LIB)
 LDFLAGS_DEBUG = $(LDFLAGS) -pg
 OBJDIR_DEBUG = obj/Debug
-DEP_DEBUG = 
+DEP_DEBUG =
 OUT_DEBUG = bin/Debug/sainsmartrelay
 
 INC_RELEASE = $(INC)
@@ -37,7 +38,7 @@ LIBDIR_RELEASE = $(LIBDIR)
 LIB_RELEASE = $(LIB)
 LDFLAGS_RELEASE = $(LDFLAGS) -s
 OBJDIR_RELEASE = obj/Release
-DEP_RELEASE = 
+DEP_RELEASE =
 OUT_RELEASE = bin/Release/sainsmartrelay
 
 OBJ_DEBUG = $(OBJDIR_DEBUG)/sainsmartrelay.o
@@ -53,11 +54,11 @@ all: debug release
 
 clean: clean_debug clean_release
 
-before_debug: 
+before_debug:
 	test -d bin/Debug || mkdir -p bin/Debug
 	test -d $(OBJDIR_DEBUG) || mkdir -p $(OBJDIR_DEBUG)
 
-after_debug: 
+after_debug:
 
 debug: before_debug out_debug after_debug
 
@@ -67,16 +68,16 @@ out_debug: before_debug $(OBJ_DEBUG) $(DEP_DEBUG)
 $(OBJDIR_DEBUG)/sainsmartrelay.o: sainsmartrelay.c
 	$(CC) $(CFLAGS_DEBUG) $(INC_DEBUG) -c sainsmartrelay.c -o $(OBJDIR_DEBUG)/sainsmartrelay.o
 
-clean_debug: 
+clean_debug:
 	rm -f $(OBJ_DEBUG) $(OUT_DEBUG)
 	rm -rf bin/Debug
 	rm -rf $(OBJDIR_DEBUG)
 
-before_release: 
+before_release:
 	test -d bin/Release || mkdir -p bin/Release
 	test -d $(OBJDIR_RELEASE) || mkdir -p $(OBJDIR_RELEASE)
 
-after_release: 
+after_release:
 
 release: before_release out_release after_release
 
@@ -86,7 +87,7 @@ out_release: before_release $(OBJ_RELEASE) $(DEP_RELEASE)
 $(OBJDIR_RELEASE)/sainsmartrelay.o: sainsmartrelay.c
 	$(CC) $(CFLAGS_RELEASE) $(INC_RELEASE) -c sainsmartrelay.c -o $(OBJDIR_RELEASE)/sainsmartrelay.o
 
-clean_release: 
+clean_release:
 	rm -f $(OBJ_RELEASE) $(OUT_RELEASE)
 	rm -rf bin/Release
 	rm -rf $(OBJDIR_RELEASE)
@@ -94,8 +95,7 @@ clean_release:
 .PHONY: before_debug after_debug clean_debug before_release after_release clean_release
 
 install:	$(BIN)
-	@echo "[Install binary]"
+	@echo "[Install binary $(INSTALL_NAME)]"
 	@install -m 0755 -d		$(DESTDIR)$(PREFIX)/bin
 	@install -m 0755 $(OUT_RELEASE)		$(DESTDIR)$(PREFIX)/bin/$(INSTALL_NAME)
 .PHONY:	install
-

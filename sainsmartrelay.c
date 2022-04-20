@@ -229,7 +229,7 @@ int detect_relay_card_sainsmart_4_8chan(char* portname, uint8* num_relays)
     /* Check if this is an R type chip
     * Type 245RL = 5000
     */
-    //printf("relay type:%d\n",ftdi->type);
+    printf("relay type:%d\n",ftdi->type);
     if (ftdi->type != 5000 && ftdi->type != TYPE_R )
     {
         fprintf(stderr, "unable to continue, not an R-type chip\n");
@@ -243,7 +243,7 @@ int detect_relay_card_sainsmart_4_8chan(char* portname, uint8* num_relays)
     /* Return parameters */
     if (num_relays!=NULL) *num_relays = g_num_relays;
     sprintf(portname, "FTDI chipid %X", chipid);
-    //printf("DBG: portname %s\n", portname);
+    printf("DBG: portname %s\n", portname);
 
     ftdi_usb_close(ftdi);
     return 0;
@@ -273,7 +273,7 @@ int find_device(void)
         return EXIT_FAILURE;
     }
 
-    if ((ret = ftdi_usb_find_all(ftdi, &devlist, 0, 0)) < 0)
+    if ((ret = ftdi_usb_find_all(ftdi, &devlist, VENDOR_ID, DEVICE_ID)) < 0)
     {
         fprintf(stderr, "ftdi_usb_find_all failed: %d (%s)\n", ret, ftdi_get_error_string(ftdi));
         retval =  EXIT_FAILURE;
@@ -337,7 +337,7 @@ int get_relay_sainsmart_4_8chan(uint8 relay, relay_state_t* relay_state)
         fprintf(stderr,"read failed for 0x%x, error %s\n",buf[0], ftdi_get_error_string(ftdi));
         return -3;
     }
-    //printf("DBG: Read GPIO bits %02X\n", buf[0]);
+    printf("DBG: Read GPIO bits %02X\n", buf[0]);
     int *bits = get_bits(buf[0], g_num_relays);
 
     relay = relay-1;
@@ -375,7 +375,7 @@ int get_relay_sainsmart_4_8chan_all(int *relay_states)
         fprintf(stderr,"read failed for 0x%x, error %s\n",buf[0], ftdi_get_error_string(ftdi));
         return -3;
     }
-    //printf("DBG: Read GPIO bits %02X\n", buf[0]);
+    printf("DBG: Read GPIO bits %02X\n", buf[0]);
     int *bits = get_bits(buf[0], g_num_relays);
 
     int j;
@@ -416,7 +416,7 @@ int get_relay_sainsmart_4_8chan_raw(uint8 *relay_data)
         return -3;
     }
     *relay_data = buf[0];
-    //printf("DBG: Read GPIO bits %02X\n", buf[0]);
+    printf("DBG: Read GPIO bits %02X\n", buf[0]);
 
     ftdi_usb_close(ftdi);
     return 0;
@@ -470,7 +470,7 @@ int set_relay_sainsmart_4_8chan(uint8 relay, relay_state_t relay_state)
         buf[0] = buf[0] | (0x01<<relay);
     }
 
-    //printf("DBG: Writing GPIO bits %02X\n", buf[0]);
+    printf("DBG: Writing GPIO bits %02X\n", buf[0]);
 
     /* Set relay on the card */
     if (ftdi_write_data(ftdi, buf, 1) < 0)
@@ -535,7 +535,7 @@ int set_relay_sainsmart_4_8chan_all(relay_state_t relay_state)
         }
     }
 
-    //printf("DBG: Writing GPIO bits %02X\n", buf[0]);
+    printf("DBG: Writing GPIO bits %02X\n", buf[0]);
 
     /* Set relay on the card */
     if (ftdi_write_data(ftdi, buf, 1) < 0)
@@ -573,7 +573,7 @@ int set_relay_sainsmart_4_8chan_write(uint8 relay_data)
     /* Set the new relay state bit */
     buf[0] = relay_data;
 
-    //printf("DBG: Writing GPIO bits %02X\n", buf[0]);
+    printf("DBG: Writing GPIO bits %02X\n", buf[0]);
 
     /* Set relay on the card */
     if (ftdi_write_data(ftdi, buf, 1) < 0)
@@ -861,4 +861,3 @@ int main(int argc, char *argv[])
     }
     exit(EXIT_SUCCESS);
 }
-
