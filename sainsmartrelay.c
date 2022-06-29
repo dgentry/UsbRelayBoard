@@ -12,24 +12,39 @@
 
 static struct ftdi_context *ftdi;
 static uint8 g_num_relays=MAX_NUM_RELAYS;
+char relay_str[40] = "";
+
+static void set_relaystr()
+{
+    const char *base = "[1|2|3|4|%sall]";
+
+    if (MAX_NUM_RELAYS == 8) {
+      sprintf(relay_str, base, "5|6|7|8|");
+    } else {
+      sprintf(relay_str, base, "");
+    }
+}
+
 
 static void usage(char *myName)
 {
+    set_relaystr();
     fprintf(stderr, "\nUsage:\n");
-    fprintf(stderr, "  %s --on [1|2|3|4|all]\n", myName);
-    fprintf(stderr, "  %s --off [1|2|3|4|all]\n", myName);
-    fprintf(stderr, "  %s --status [1|2|3|4|all]\n", myName);
+    fprintf(stderr, "  %s --on %s\n", relay_str, myName);
+    fprintf(stderr, "  %s --off %s\n", relay_str, myName);
+    fprintf(stderr, "  %s --status %s\n", relay_str, myName);
     fprintf(stderr, "  %s --findall\n", myName);
     fprintf(stderr, "  %s -h\n", myName);
 }
 
 static void help(char *myName)
 {
-    fprintf(stdout, "\nHelp:\n %s --on [1|2|3|4|all] | --off [1|2|3|4|all] | --status | --findall | [-h]\n", myName);
+    set_relaystr();
+    fprintf(stdout, "\nHelp:\n %s --on %s | --off %s | --status | --findall | [-h]\n", relay_str, relay_str, myName);
     fprintf(stdout, "  --help|-h  print this help.\n");
-    fprintf(stdout, "  --on | -o [1|2|3|4|all]  switch specified relay output on.This argument also allows comma seperated relay numbers.\n");
-    fprintf(stdout, "  --off | -f [1|2|3|4|all]  switch specified relay output off.This argument also allows comma seperated relay numbers.\n");
-    fprintf(stdout, "  --status | -s [1|2|3|4|all] get the relay status.\n");
+    fprintf(stdout, "  --on | -o %s  switch specified relay output on.  This argument also allows comma seperated relay numbers.\n", relay_str);
+    fprintf(stdout, "  --off | -f %s  switch specified relay output off.This argument also allows comma seperated relay numbers.\n", relay_str);
+    fprintf(stdout, "  --status | -s %s get the relay status.\n", relay_str);
     fprintf(stdout, "  --findall | -a find all the FTDI device connected to the system.\n");
 }
 

@@ -97,5 +97,5 @@ clean_release:
 install:	$(BIN)
 	@echo "[Install binary $(INSTALL_NAME)]"
 	@install -m 0755 -d		$(DESTDIR)$(PREFIX)/bin
-	@install -m 0755 $(OUT_RELEASE)		$(DESTDIR)$(PREFIX)/bin/$(INSTALL_NAME)
+	@install -o root -m 2755 $(OUT_RELEASE)		$(DESTDIR)$(PREFIX)/bin/$(INSTALL_NAME)
 .PHONY:	install
